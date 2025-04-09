@@ -17,6 +17,7 @@ import Profile from "@/pages/Profile";
 import Subscription from "@/pages/Subscription";
 import LogoutConfirmation from "@/pages/LogoutConfirmation";
 import NotFound from "@/pages/NotFound";
+import Index from "@/pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,9 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
+          {/* Index redirect */}
+          <Route path="/index" element={<Index />} />
           
           {/* Protected Routes (in a real app, these would be protected with authentication) */}
           <Route path="/dashboard" element={<Dashboard />} />

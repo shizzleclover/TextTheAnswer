@@ -14,37 +14,19 @@ const mockQuestions = [
   {
     id: '1',
     question: 'Which planet is known as the Red Planet?',
-    options: [
-      { id: 'a', text: 'Venus' },
-      { id: 'b', text: 'Mars' },
-      { id: 'c', text: 'Jupiter' },
-      { id: 'd', text: 'Saturn' }
-    ],
-    correctOptionId: 'b',
+    correctAnswer: 'Mars',
     explanation: 'Mars is called the Red Planet because it appears reddish in color due to iron oxide (rust) on its surface.'
   },
   {
     id: '2',
     question: 'Which element has the chemical symbol "O"?',
-    options: [
-      { id: 'a', text: 'Osmium' },
-      { id: 'b', text: 'Oxygen' },
-      { id: 'c', text: 'Oganesson' },
-      { id: 'd', text: 'Oreganum' }
-    ],
-    correctOptionId: 'b',
+    correctAnswer: 'Oxygen',
     explanation: 'Oxygen is represented by the chemical symbol "O" on the periodic table.'
   },
   {
     id: '3',
     question: 'Who wrote "Romeo and Juliet"?',
-    options: [
-      { id: 'a', text: 'Charles Dickens' },
-      { id: 'b', text: 'William Shakespeare' },
-      { id: 'c', text: 'Jane Austen' },
-      { id: 'd', text: 'Mark Twain' }
-    ],
-    correctOptionId: 'b',
+    correctAnswer: 'William Shakespeare',
     explanation: 'William Shakespeare wrote the famous romantic tragedy "Romeo and Juliet" around 1594-1596.'
   }
 ];
@@ -55,30 +37,34 @@ const DailyQuiz = () => {
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [score, setScore] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>({});
   
   const currentQuestion = mockQuestions[currentQuestionIndex];
   const totalQuestions = mockQuestions.length;
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
   
-  const handleAnswer = (optionId: string) => {
-    const newUserAnswers = { ...userAnswers, [currentQuestion.id]: optionId };
+  const handleAnswer = (answer: string) => {
+    const questionId = currentQuestion.id;
+    const newUserAnswers = { ...userAnswers, [questionId]: answer };
     setUserAnswers(newUserAnswers);
     
+    // Compare user answer with correct answer (case insensitive)
+    const isCorrect = answer.toLowerCase() === currentQuestion.correctAnswer.toLowerCase();
+    setCorrectAnswers({...correctAnswers, [questionId]: isCorrect});
+    
     // Update score if answer is correct
-    if (optionId === currentQuestion.correctOptionId) {
+    if (isCorrect) {
       setScore(prevScore => prevScore + 1);
     }
     
     // Show feedback toast
-    if (optionId === currentQuestion.correctOptionId) {
+    if (isCorrect) {
       toast.success('Correct answer!', {
         description: 'Well done!',
       });
     } else {
       toast.error('Incorrect answer!', {
-        description: `The correct answer was: ${
-          currentQuestion.options.find(o => o.id === currentQuestion.correctOptionId)?.text
-        }`,
+        description: `The correct answer was: ${currentQuestion.correctAnswer}`,
       });
     }
     
@@ -95,6 +81,7 @@ const DailyQuiz = () => {
   const resetQuiz = () => {
     setCurrentQuestionIndex(0);
     setUserAnswers({});
+    setCorrectAnswers({});
     setIsQuizCompleted(false);
     setScore(0);
   };
@@ -127,13 +114,12 @@ const DailyQuiz = () => {
             
             <GameCard title={`Question ${currentQuestionIndex + 1}`} className="max-w-3xl mx-auto">
               <QuizQuestion
-                question={currentQuestion.question}
-                options={currentQuestion.options}
-                explanation={userAnswers[currentQuestion.id] ? currentQuestion.explanation : undefined}
+                question={currentQuestion}
+                timeLimit={30}
                 onAnswer={handleAnswer}
                 isAnswered={!!userAnswers[currentQuestion.id]}
-                correctOptionId={userAnswers[currentQuestion.id] ? currentQuestion.correctOptionId : undefined}
-                selectedOptionId={userAnswers[currentQuestion.id]}
+                isCorrect={correctAnswers[currentQuestion.id]}
+                userAnswer={userAnswers[currentQuestion.id]}
               />
             </GameCard>
           </div>

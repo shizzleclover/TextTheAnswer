@@ -2,20 +2,20 @@
 import React, { useState } from 'react';
 import MainLayout from '@/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ScanLine, Building, GraduationCap } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 
 const Subscription = () => {
   const [selectedPlan, setSelectedPlan] = useState<string>('monthly');
   
-  const handleSubscribe = (plan: string) => {
+  const handleSubscribe = (plan: string, tier: string) => {
     toast.loading('Processing subscription...');
     
     setTimeout(() => {
       toast.dismiss();
       toast.success('Subscription successful!', {
-        description: `You are now a premium member with a ${plan} subscription.`,
+        description: `You are now a premium member with a ${tier} ${plan} subscription.`,
       });
     }, 2000);
   };
@@ -54,30 +54,33 @@ const Subscription = () => {
                 Get access to all premium features and enjoy an ad-free experience.
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {/* Monthly Plan */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                {/* Standard Plan */}
                 <div 
                   className={`bg-white border rounded-xl p-6 transition-all ${
-                    selectedPlan === 'monthly' 
+                    selectedPlan === 'standard' 
                       ? 'border-imperial/50 shadow-lg shadow-imperial/10' 
                       : 'border-gray-200'
                   }`}
-                  onClick={() => setSelectedPlan('monthly')}
+                  onClick={() => setSelectedPlan('standard')}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold">Monthly</h3>
-                      <div className="text-sm text-gray-500">Billed monthly</div>
+                      <div className="flex items-center gap-2">
+                        <Building className="h-5 w-5 text-imperial" />
+                        <h3 className="text-lg font-semibold">Standard</h3>
+                      </div>
+                      <div className="text-sm text-gray-500">For individual users</div>
                     </div>
                     <div className="h-5 w-5 rounded-full border border-gray-300 flex items-center justify-center">
-                      {selectedPlan === 'monthly' && (
+                      {selectedPlan === 'standard' && (
                         <div className="h-3 w-3 rounded-full bg-imperial"></div>
                       )}
                     </div>
                   </div>
                   
                   <div className="mb-4">
-                    <span className="text-3xl font-bold">$4.99</span>
+                    <span className="text-3xl font-bold">£9.99</span>
                     <span className="text-gray-500">/month</span>
                   </div>
                   
@@ -97,10 +100,65 @@ const Subscription = () => {
                   </ul>
                   
                   <Button 
-                    onClick={() => handleSubscribe('monthly')}
+                    onClick={() => handleSubscribe('monthly', 'standard')}
                     className="w-full bg-imperial hover:bg-imperial/90"
                   >
-                    Choose Monthly
+                    Choose Standard
+                  </Button>
+                </div>
+                
+                {/* Education Plan */}
+                <div 
+                  className={`bg-white border rounded-xl p-6 transition-all ${
+                    selectedPlan === 'education' 
+                      ? 'border-imperial/50 shadow-lg shadow-imperial/10' 
+                      : 'border-gray-200'
+                  }`}
+                  onClick={() => setSelectedPlan('education')}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <GraduationCap className="h-5 w-5 text-blue-500" />
+                        <h3 className="text-lg font-semibold">Education</h3>
+                      </div>
+                      <div className="text-sm text-gray-500">For students</div>
+                      <div className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded mt-1">
+                        Student Discount
+                      </div>
+                    </div>
+                    <div className="h-5 w-5 rounded-full border border-gray-300 flex items-center justify-center">
+                      {selectedPlan === 'education' && (
+                        <div className="h-3 w-3 rounded-full bg-imperial"></div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold">£5.99</span>
+                    <span className="text-gray-500">/month</span>
+                  </div>
+                  
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      <span>Ad-free experience</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      <span>Unlimited daily quizzes</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <ScanLine className="h-5 w-5 text-blue-500" />
+                      <span>Scan study materials for quizzes</span>
+                    </li>
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => handleSubscribe('monthly', 'education')}
+                    className="w-full bg-blue-500 hover:bg-blue-600"
+                  >
+                    Choose Education
                   </Button>
                 </div>
                 
@@ -129,7 +187,7 @@ const Subscription = () => {
                   </div>
                   
                   <div className="mb-4">
-                    <span className="text-3xl font-bold">$39.99</span>
+                    <span className="text-3xl font-bold">£79.99</span>
                     <span className="text-gray-500">/year</span>
                   </div>
                   
@@ -150,10 +208,14 @@ const Subscription = () => {
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
                       <span>Premium question packs</span>
                     </li>
+                    <li className="flex items-center gap-2">
+                      <ScanLine className="h-5 w-5 text-green-500" />
+                      <span>Scan study materials for quizzes</span>
+                    </li>
                   </ul>
                   
                   <Button 
-                    onClick={() => handleSubscribe('annual')}
+                    onClick={() => handleSubscribe('annual', 'standard')}
                     className="w-full bg-imperial hover:bg-imperial/90"
                   >
                     Choose Annual
@@ -174,7 +236,7 @@ const Subscription = () => {
                     <div className="text-sm text-gray-500">Active subscription</div>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold">$4.99/month</div>
+                    <div className="font-semibold">£9.99/month</div>
                     <div className="text-sm text-gray-500">Next billing: May 15, 2023</div>
                   </div>
                 </div>
@@ -189,7 +251,7 @@ const Subscription = () => {
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       <div className="text-gray-500">Billing Address</div>
-                      <div className="col-span-2">123 Main St, Anytown, USA</div>
+                      <div className="col-span-2">123 Main St, Anytown, UK</div>
                     </div>
                   </div>
                 </div>

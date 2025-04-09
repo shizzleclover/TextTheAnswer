@@ -1,38 +1,38 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { CheckCircle, XCircle, HelpCircle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface QuizOption {
+interface QuizQuestion {
   id: string;
-  text: string;
+  question: string;
+  correctAnswer: string;
+  explanation?: string;
 }
 
 interface QuizQuestionProps {
-  question: string;
-  options: QuizOption[];
-  explanation?: string;
+  question: QuizQuestion;
   timeLimit?: number; // in seconds
-  onAnswer: (optionId: string) => void;
+  onAnswer: (answer: string) => void;
   isAnswered: boolean;
-  correctOptionId?: string;
-  selectedOptionId?: string;
+  isCorrect?: boolean;
+  userAnswer?: string;
 }
 
 const QuizQuestion = ({ 
   question, 
-  options,
-  explanation,
   timeLimit,
   onAnswer,
   isAnswered,
-  correctOptionId,
-  selectedOptionId
+  isCorrect,
+  userAnswer
 }: QuizQuestionProps) => {
   const [timeRemaining, setTimeRemaining] = useState<number | null>(timeLimit || null);
+  const [inputValue, setInputValue] = useState('');
   
-  React.useEffect(() => {
+  useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
     
     if (timeLimit && !isAnswered) {
@@ -52,38 +52,17 @@ const QuizQuestion = ({
     };
   }, [timeLimit, isAnswered]);
   
-  React.useEffect(() => {
+  useEffect(() => {
     if (timeRemaining === 0) {
       onAnswer('');
     }
   }, [timeRemaining, onAnswer]);
 
-  const getOptionStateStyles = (optionId: string) => {
-    if (!isAnswered) return '';
-    
-    if (optionId === correctOptionId) {
-      return 'border-green-500 bg-green-50';
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAnswered && inputValue.trim()) {
+      onAnswer(inputValue.trim());
     }
-    
-    if (optionId === selectedOptionId && optionId !== correctOptionId) {
-      return 'border-red-500 bg-red-50';
-    }
-    
-    return 'opacity-60';
-  };
-  
-  const getOptionIcon = (optionId: string) => {
-    if (!isAnswered) return null;
-    
-    if (optionId === correctOptionId) {
-      return <CheckCircle className="w-5 h-5 text-green-500" />;
-    }
-    
-    if (optionId === selectedOptionId && optionId !== correctOptionId) {
-      return <XCircle className="w-5 h-5 text-red-500" />;
-    }
-    
-    return null;
   };
   
   return (
@@ -100,33 +79,64 @@ const QuizQuestion = ({
         </div>
       )}
       
-      <div className="text-xl font-medium font-montserrat">{question}</div>
+      <div className="text-xl font-medium font-montserrat">{question.question}</div>
       
-      <div className="flex flex-col gap-3">
-        {options.map((option) => (
-          <button 
-            key={option.id}
-            className={cn(
-              "quiz-option flex justify-between items-center",
-              getOptionStateStyles(option.id),
-              !isAnswered && "hover:bg-imperial/5"
-            )}
-            onClick={() => !isAnswered && onAnswer(option.id)}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className={cn(
+          "flex flex-col gap-2",
+          isAnswered && "opacity-60"
+        )}>
+          <Input
+            type="text"
+            placeholder="Type your answer here..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             disabled={isAnswered}
+            className={cn(
+              isAnswered && isCorrect && "border-green-500 bg-green-50",
+              isAnswered && !isCorrect && "border-red-500 bg-red-50"
+            )}
+          />
+          <Button 
+            type="submit" 
+            disabled={isAnswered || !inputValue.trim()}
+            className="bg-imperial hover:bg-imperial/90"
           >
-            <span>{option.text}</span>
-            {getOptionIcon(option.id)}
-          </button>
-        ))}
-      </div>
+            Submit Answer
+          </Button>
+        </div>
+      </form>
       
-      {isAnswered && explanation && (
+      {isAnswered && (
+        <div className={cn(
+          "flex items-center gap-3 p-3 rounded-md",
+          isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"
+        )}>
+          {isCorrect ? (
+            <CheckCircle className="w-6 h-6 text-green-500 shrink-0" />
+          ) : (
+            <XCircle className="w-6 h-6 text-red-500 shrink-0" />
+          )}
+          <div>
+            {isCorrect ? (
+              <p className="font-medium">Correct answer!</p>
+            ) : (
+              <div>
+                <p className="font-medium">Incorrect answer!</p>
+                <p className="text-sm">The correct answer was: <span className="font-semibold">{question.correctAnswer}</span></p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {isAnswered && question.explanation && (
         <div className="mt-4 bg-dutch-white/50 border border-dutch-white rounded-lg p-4">
           <div className="flex items-start gap-2">
             <HelpCircle className="w-5 h-5 text-imperial shrink-0 mt-0.5" />
             <div>
               <h4 className="font-semibold mb-1">Explanation</h4>
-              <p className="text-sm">{explanation}</p>
+              <p className="text-sm">{question.explanation}</p>
             </div>
           </div>
         </div>
