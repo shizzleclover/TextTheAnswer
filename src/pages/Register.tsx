@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { z } from 'zod';
+import { useAuth } from '@/context/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -36,6 +37,7 @@ const formSchema = z.object({
 
 const Register = () => {
   const navigate = useNavigate();
+  const { isRegistering } = useAuth();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
