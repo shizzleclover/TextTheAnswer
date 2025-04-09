@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -40,12 +39,15 @@ const Login = () => {
     },
   });
 
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsAuthenticating(true);
     toast.loading('Logging in...');
-    
+
     try {
       const response = await authService.login(values.email, values.password);
-      
+
       if (response.error) {
         toast.dismiss();
         toast.error('Login failed', {
@@ -53,7 +55,7 @@ const Login = () => {
         });
         return;
       }
-      
+
       toast.dismiss();
       toast.success('Logged in successfully!');
       navigate('/dashboard');
@@ -62,12 +64,14 @@ const Login = () => {
       toast.error('Login failed', {
         description: 'An unexpected error occurred',
       });
+    } finally {
+      setIsAuthenticating(false);
     }
   };
 
   const handleThirdPartyLogin = (provider: string) => {
     toast.loading(`Connecting to ${provider}...`);
-    
+
     // In a real implementation, this would redirect to the OAuth provider
     setTimeout(() => {
       toast.dismiss();
@@ -116,7 +120,7 @@ const Login = () => {
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="rememberMe"
@@ -132,13 +136,13 @@ const Login = () => {
               </FormItem>
             )}
           />
-          
-          <Button type="submit" className="w-full bg-imperial hover:bg-imperial/90">
-            Sign in
+
+          <Button type="submit" className="w-full bg-imperial hover:bg-imperial/90" disabled={isAuthenticating}>
+            {isAuthenticating ? "Signing in..." : "Sign in"}
           </Button>
         </form>
       </Form>
-      
+
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-200"></div>
@@ -147,7 +151,7 @@ const Login = () => {
           <span className="bg-white px-2 text-gray-500">Or continue with</span>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-4">
         <Button 
           variant="outline" 

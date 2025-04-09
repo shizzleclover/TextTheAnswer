@@ -13,6 +13,8 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isAuthenticating: boolean;
+  isRegistering: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -23,6 +25,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+const [isAuthenticating, setIsAuthenticating] = useState(false);
+const [isRegistering, setIsRegistering] = useState(false);
   
   useEffect(() => {
     const loadUser = async () => {
@@ -49,6 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
   
   const login = async (email: string, password: string) => {
+    setIsAuthenticating(true);
     try {
       const response = await authService.login(email, password);
       
@@ -63,10 +68,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: true };
     } catch (error) {
       return { success: false, error: 'An unexpected error occurred' };
+    } finally {
+      setIsAuthenticating(false);
     }
   };
   
   const register = async (username: string, email: string, password: string) => {
+    setIsRegistering(true);
     try {
       const response = await authService.register(username, email, password);
       
@@ -77,6 +85,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: true };
     } catch (error) {
       return { success: false, error: 'An unexpected error occurred' };
+    } finally {
+      setIsRegistering(false);
     }
   };
   
@@ -91,6 +101,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isAuthenticated: !!user,
         isLoading,
+        isAuthenticating,
+        isRegistering,
         login,
         register,
         logout,

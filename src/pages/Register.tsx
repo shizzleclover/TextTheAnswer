@@ -147,8 +147,8 @@ const Register = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full bg-imperial hover:bg-imperial/90">
-            Create Account
+          <Button type="submit" className="w-full bg-imperial hover:bg-imperial/90" disabled={isRegistering}>
+            {isRegistering ? "Creating Account..." : "Create Account"}
           </Button>
         </form>
       </Form>
