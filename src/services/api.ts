@@ -1,5 +1,4 @@
 
-// Base API configuration for all service calls
 const API_BASE_URL = 'http://localhost:3000';
 
 interface ApiResponse<T> {
@@ -17,7 +16,6 @@ export async function apiRequest<T>(
       'Content-Type': 'application/json',
     };
     
-    // Get token from localStorage if it exists
     const token = localStorage.getItem('authToken');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
@@ -27,13 +25,17 @@ export async function apiRequest<T>(
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined,
-      credentials: 'include', // Include cookies for session management
+      credentials: 'include',
     });
     
     const data = await response.json();
     
     if (!response.ok) {
       return { error: data.message || 'Something went wrong' };
+    }
+    
+    if (data.token) {
+      localStorage.setItem('authToken', data.token);
     }
     
     return { data };
