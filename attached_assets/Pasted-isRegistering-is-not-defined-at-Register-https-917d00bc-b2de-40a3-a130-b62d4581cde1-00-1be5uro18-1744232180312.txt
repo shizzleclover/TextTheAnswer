@@ -1,0 +1,27 @@
+isRegistering is not defined
+at Register (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/src/pages/Register.tsx:465:39)
+at renderWithHooks (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:11548:26)
+at mountIndeterminateComponent (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:14926:21)
+at beginWork (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:15914:22)
+at HTMLUnknownElement.callCallback2 (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:3674:22)
+at Object.invokeGuardedCallbackDev (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:3699:24)
+at invokeGuardedCallback (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:3733:39)
+at beginWork$1 (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:19765:15)
+at performUnitOfWork (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:19198:20)
+at workLoopSync (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=8c6fbdd3:19137:13)
+The above error occurred in the <Register> component:
+
+    at Register (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/src/pages/Register.tsx:41:22)
+    at RenderedRoute (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=8c6fbdd3:4069:5)
+    at Routes (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=8c6fbdd3:4508:5)
+    at Router (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=8c6fbdd3:4451:15)
+    at BrowserRouter (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=8c6fbdd3:5196:5)
+    at Provider (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/chunk-ILGIBKVE.js?v=8c6fbdd3:25:15)
+    at TooltipProvider (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=8c6fbdd3:2254:5)
+    at AuthProvider (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/src/context/AuthContext.tsx:14:32)
+    at QueryClientProvider (https://917d00bc-b2de-40a3-a130-b62d4581cde1-00-1be5uro18bj83.picard.replit.dev/node_modules/.vite/deps/@tanstack_react-query.js?v=8c6fbdd3:2794:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+isRegistering is not defined
