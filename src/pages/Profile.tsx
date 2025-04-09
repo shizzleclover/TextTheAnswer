@@ -131,7 +131,7 @@ const Profile = () => {
                   <span>Accuracy</span>
                   <span className="font-medium">{Math.round((mockStats.correctAnswers / mockStats.totalAnswers) * 100)}%</span>
                 </div>
-                <Progress value={(mockStats.correctAnswers / mockStats.totalAnswers) * 100} className="h-2" />
+                <Progress value={(mockStats.correctAnswers / mockStats.totalAnswers) * 100} className="h-2 bg-imperial/20" />
               </div>
             </div>
           </GameCard>
@@ -158,7 +158,7 @@ const Profile = () => {
                   <span>Win Rate</span>
                   <span className="font-medium">{mockStats.winRate}%</span>
                 </div>
-                <Progress value={mockStats.winRate} className="h-2" />
+                <Progress value={mockStats.winRate} className="h-2 bg-carolina-blue/20" />
               </div>
             </div>
           </GameCard>
@@ -225,8 +225,7 @@ const Profile = () => {
                     </div>
                     <Progress 
                       value={achievement.progress} 
-                      className="h-1.5" 
-                      indicatorClassName={achievement.isCompleted ? "bg-yellow-500" : undefined}
+                      className={`h-1.5 ${achievement.isCompleted ? "bg-yellow-100" : "bg-gray-100"}`}
                     />
                   </div>
                 </div>

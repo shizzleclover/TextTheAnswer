@@ -8,7 +8,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Award, Trophy, Medal } from 'lucide-react';
+import { Award, Trophy, Medal, Flame } from 'lucide-react';
 
 interface LeaderboardEntry {
   rank: number;

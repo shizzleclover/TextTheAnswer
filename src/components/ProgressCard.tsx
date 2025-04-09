@@ -15,24 +15,24 @@ const ProgressCard = ({ title, value, total, type }: ProgressCardProps) => {
   const percentage = (value / total) * 100;
   
   let icon;
-  let color;
+  let colorClass;
   
   switch (type) {
     case 'streak':
       icon = <Flame className="h-5 w-5 text-orange-500" />;
-      color = 'bg-orange-500';
+      colorClass = 'bg-orange-500';
       break;
     case 'score':
       icon = <Star className="h-5 w-5 text-yellow-500" />;
-      color = 'bg-yellow-500';
+      colorClass = 'bg-yellow-500';
       break;
     case 'rank':
       icon = <Trophy className="h-5 w-5 text-imperial" />;
-      color = 'bg-imperial';
+      colorClass = 'bg-imperial';
       break;
     default:
       icon = <Star className="h-5 w-5 text-imperial" />;
-      color = 'bg-imperial';
+      colorClass = 'bg-imperial';
   }
   
   return (
@@ -48,8 +48,7 @@ const ProgressCard = ({ title, value, total, type }: ProgressCardProps) => {
         </div>
         <Progress
           value={percentage} 
-          className="h-2" 
-          indicatorClassName={color}
+          className={`h-2 ${colorClass}`}
         />
       </div>
     </GameCard>

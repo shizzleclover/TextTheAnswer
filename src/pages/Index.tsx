@@ -7,8 +7,12 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to landing page
-    navigate("/");
+    // Small timeout to ensure all React contexts are properly initialized
+    const timer = setTimeout(() => {
+      navigate("/dashboard");
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
