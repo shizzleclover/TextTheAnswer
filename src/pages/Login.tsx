@@ -17,6 +17,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import AuthLayout from '@/layouts/AuthLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { authService } from '@/services/authService';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -40,16 +41,40 @@ const Login = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // In real app, you'd call your API here
-    console.log(values);
-    
-    // Simulate API call
     toast.loading('Logging in...');
     
-    setTimeout(() => {
+    try {
+      const response = await authService.login(values.email, values.password);
+      
+      if (response.error) {
+        toast.dismiss();
+        toast.error('Login failed', {
+          description: response.error,
+        });
+        return;
+      }
+      
+      toast.dismiss();
       toast.success('Logged in successfully!');
       navigate('/dashboard');
-    }, 1500);
+    } catch (error) {
+      toast.dismiss();
+      toast.error('Login failed', {
+        description: 'An unexpected error occurred',
+      });
+    }
+  };
+
+  const handleThirdPartyLogin = (provider: string) => {
+    toast.loading(`Connecting to ${provider}...`);
+    
+    // In a real implementation, this would redirect to the OAuth provider
+    setTimeout(() => {
+      toast.dismiss();
+      toast('Not implemented', {
+        description: `${provider} login is not implemented in this demo`,
+      });
+    }, 1000);
   };
 
   return (
@@ -124,11 +149,19 @@ const Login = () => {
       </div>
       
       <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" className="flex gap-2">
+        <Button 
+          variant="outline" 
+          className="flex gap-2" 
+          onClick={() => handleThirdPartyLogin('X')}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>
           X
         </Button>
-        <Button variant="outline" className="flex gap-2">
+        <Button 
+          variant="outline" 
+          className="flex gap-2"
+          onClick={() => handleThirdPartyLogin('Apple')}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><path d="M10 2c1 .5 2 2 2 5"></path></svg>
           Apple
         </Button>

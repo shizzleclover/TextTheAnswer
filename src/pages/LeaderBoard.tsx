@@ -1,38 +1,60 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainLayout from '@/layouts/MainLayout';
 import LeaderboardTable from '@/components/LeaderboardTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { quizService, LeaderboardEntry } from '@/services/quizService';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
-// Mock data
-const mockDailyLeaderboard = [
-  { rank: 1, name: "Emma Johnson", score: 100, streak: 15 },
-  { rank: 2, name: "Oliver Smith", score: 95, streak: 12 },
-  { rank: 3, name: "Noah Williams", score: 90, streak: 20 },
-  { rank: 4, name: "Charlotte Brown", score: 85, streak: 7 },
-  { rank: 5, name: "Elijah Jones", score: 80, streak: 10 },
-  { rank: 6, name: "Amelia Davis", score: 75, streak: 5 },
-  { rank: 7, name: "Liam Wilson", score: 70, streak: 3 },
-  { rank: 8, name: "Sophia Taylor", score: 65, streak: 8 },
-  { rank: 9, name: "Lucas Moore", score: 60, streak: 2 },
-  { rank: 10, name: "Isabella Anderson", score: 55, streak: 1 },
-];
-
-const mockMultiplayerLeaderboard = [
-  { rank: 1, name: "James Johnson", score: 1250 },
-  { rank: 2, name: "Olivia Smith", score: 1100 },
-  { rank: 3, name: "William Williams", score: 950 },
-  { rank: 4, name: "Ava Brown", score: 900 },
-  { rank: 5, name: "Benjamin Jones", score: 850 },
-  { rank: 6, name: "Mia Davis", score: 800 },
-  { rank: 7, name: "Mason Wilson", score: 750 },
-  { rank: 8, name: "Isabella Taylor", score: 700 },
-  { rank: 9, name: "Ethan Moore", score: 650 },
-  { rank: 10, name: "Sofia Anderson", score: 600 },
-];
-
-const Leaderboard = () => {
+const LeaderBoard = () => {
   const [activeTab, setActiveTab] = useState<string>('daily');
+  const [dailyLeaderboard, setDailyLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      setIsLoading(true);
+      try {
+        const response = await quizService.getDailyLeaderboard();
+        
+        if (response.error) {
+          setError(response.error);
+          toast.error('Failed to load leaderboard', {
+            description: response.error
+          });
+        } else if (response.data) {
+          setDailyLeaderboard(response.data);
+        }
+      } catch (err) {
+        setError('Failed to load leaderboard data');
+        toast.error('Error', {
+          description: 'Failed to load leaderboard data'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    if (activeTab === 'daily') {
+      fetchLeaderboard();
+    }
+  }, [activeTab]);
+  
+  // Mock data for multiplayer leaderboard since we don't have an endpoint for it yet
+  const mockMultiplayerLeaderboard = [
+    { rank: 1, name: "James Johnson", score: 1250 },
+    { rank: 2, name: "Olivia Smith", score: 1100 },
+    { rank: 3, name: "William Williams", score: 950 },
+    { rank: 4, name: "Ava Brown", score: 900 },
+    { rank: 5, name: "Benjamin Jones", score: 850 },
+    { rank: 6, name: "Mia Davis", score: 800 },
+    { rank: 7, name: "Mason Wilson", score: 750 },
+    { rank: 8, name: "Isabella Taylor", score: 700 },
+    { rank: 9, name: "Ethan Moore", score: 650 },
+    { rank: 10, name: "Sofia Anderson", score: 600 },
+  ];
   
   return (
     <MainLayout>
@@ -55,7 +77,23 @@ const Leaderboard = () => {
                 <p className="text-gray-600">Today's top performers based on quiz scores and streaks.</p>
               </div>
               
-              <LeaderboardTable entries={mockDailyLeaderboard} type="daily" />
+              {isLoading ? (
+                <div className="flex justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-imperial" />
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <p className="text-red-500 mb-2">Failed to load leaderboard data</p>
+                  <button 
+                    onClick={() => setActiveTab('daily')} 
+                    className="text-imperial underline"
+                  >
+                    Try again
+                  </button>
+                </div>
+              ) : (
+                <LeaderboardTable entries={dailyLeaderboard} type="daily" />
+              )}
             </TabsContent>
             
             <TabsContent value="multiplayer" className="space-y-6">
@@ -73,4 +111,4 @@ const Leaderboard = () => {
   );
 };
 
-export default Leaderboard;
+export default LeaderBoard;

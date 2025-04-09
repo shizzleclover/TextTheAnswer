@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainLayout from '@/layouts/MainLayout';
 import QuizQuestion from '@/components/QuizQuestion';
 import GameCard from '@/components/GameCard';
@@ -8,74 +8,106 @@ import { Progress } from '@/components/ui/progress';
 import { ArrowRight, Award, CheckCircle, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-
-// Mock data for daily quiz
-const mockQuestions = [
-  {
-    id: '1',
-    question: 'Which planet is known as the Red Planet?',
-    correctAnswer: 'Mars',
-    explanation: 'Mars is called the Red Planet because it appears reddish in color due to iron oxide (rust) on its surface.'
-  },
-  {
-    id: '2',
-    question: 'Which element has the chemical symbol "O"?',
-    correctAnswer: 'Oxygen',
-    explanation: 'Oxygen is represented by the chemical symbol "O" on the periodic table.'
-  },
-  {
-    id: '3',
-    question: 'Who wrote "Romeo and Juliet"?',
-    correctAnswer: 'William Shakespeare',
-    explanation: 'William Shakespeare wrote the famous romantic tragedy "Romeo and Juliet" around 1594-1596.'
-  }
-];
+import { quizService, QuizQuestion as QuizQuestionType } from '@/services/quizService';
 
 const DailyQuiz = () => {
   const navigate = useNavigate();
+  const [questions, setQuestions] = useState<QuizQuestionType[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
-  const currentQuestion = mockQuestions[currentQuestionIndex];
-  const totalQuestions = mockQuestions.length;
-  const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+  useEffect(() => {
+    const fetchQuizQuestions = async () => {
+      setIsLoading(true);
+      try {
+        const response = await quizService.getDailyQuiz();
+        
+        if (response.error) {
+          setError(response.error);
+          toast.error('Failed to load quiz', {
+            description: response.error
+          });
+        } else if (response.data) {
+          setQuestions(response.data);
+        }
+      } catch (err) {
+        setError('Failed to load quiz questions');
+        toast.error('Error', {
+          description: 'Failed to load quiz questions'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchQuizQuestions();
+  }, []);
   
-  const handleAnswer = (answer: string) => {
+  const currentQuestion = questions[currentQuestionIndex];
+  const totalQuestions = questions.length;
+  const progress = totalQuestions > 0 ? ((currentQuestionIndex + 1) / totalQuestions) * 100 : 0;
+  
+  const handleAnswer = async (answer: string) => {
+    if (!currentQuestion) return;
+    
     const questionId = currentQuestion.id;
     const newUserAnswers = { ...userAnswers, [questionId]: answer };
     setUserAnswers(newUserAnswers);
     
-    // Compare user answer with correct answer (case insensitive)
-    const isCorrect = answer.toLowerCase() === currentQuestion.correctAnswer.toLowerCase();
-    setCorrectAnswers({...correctAnswers, [questionId]: isCorrect});
-    
-    // Update score if answer is correct
-    if (isCorrect) {
-      setScore(prevScore => prevScore + 1);
-    }
-    
-    // Show feedback toast
-    if (isCorrect) {
-      toast.success('Correct answer!', {
-        description: 'Well done!',
+    try {
+      const response = await quizService.submitAnswer({
+        questionId,
+        answer
       });
-    } else {
-      toast.error('Incorrect answer!', {
-        description: `The correct answer was: ${currentQuestion.correctAnswer}`,
-      });
-    }
-    
-    // Wait for a moment before moving to next question
-    setTimeout(() => {
-      if (currentQuestionIndex < totalQuestions - 1) {
-        setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-      } else {
-        setIsQuizCompleted(true);
+      
+      if (response.error) {
+        toast.error('Error submitting answer', {
+          description: response.error
+        });
+        return;
       }
-    }, 2000);
+      
+      const isCorrect = response.data?.correct || false;
+      setCorrectAnswers({...correctAnswers, [questionId]: isCorrect});
+      
+      // Update score if answer is correct
+      if (isCorrect) {
+        setScore(prevScore => prevScore + 1);
+      }
+      
+      // Show feedback toast
+      if (isCorrect) {
+        toast.success('Correct answer!', {
+          description: 'Well done!',
+        });
+      } else {
+        toast.error('Incorrect answer!', {
+          description: `The correct answer was: ${response.data?.correctAnswer || currentQuestion.correctAnswer}`,
+        });
+      }
+      
+      // Wait for a moment before moving to next question
+      setTimeout(() => {
+        if (currentQuestionIndex < totalQuestions - 1) {
+          setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        } else {
+          setIsQuizCompleted(true);
+          
+          // In a real app, we'd submit all answers here for final score
+          // quizService.submitQuiz(Object.entries(newUserAnswers).map(([id, answer]) => ({ 
+          //   questionId: id, answer 
+          // })));
+        }
+      }, 2000);
+      
+    } catch (err) {
+      toast.error('Failed to submit answer');
+    }
   };
   
   const resetQuiz = () => {
@@ -89,6 +121,34 @@ const DailyQuiz = () => {
   const viewLeaderboard = () => {
     navigate('/leaderboard');
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <div className="flex flex-col items-center justify-center py-12">
+          <h1 className="text-3xl font-bold font-montserrat tracking-tight mb-4">Daily Quiz</h1>
+          <p className="text-gray-500 mb-6">Loading today's questions...</p>
+          <div className="w-full max-w-md">
+            <Progress value={100} className="h-2" />
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  // Show error state
+  if (error || questions.length === 0) {
+    return (
+      <MainLayout>
+        <div className="flex flex-col items-center justify-center py-12">
+          <h1 className="text-3xl font-bold font-montserrat tracking-tight mb-4">Daily Quiz</h1>
+          <p className="text-red-500 mb-6">Failed to load today's quiz questions</p>
+          <Button onClick={() => window.location.reload()} className="bg-imperial">Try Again</Button>
+        </div>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -113,14 +173,16 @@ const DailyQuiz = () => {
             <Progress value={progress} className="h-2" />
             
             <GameCard title={`Question ${currentQuestionIndex + 1}`} className="max-w-3xl mx-auto">
-              <QuizQuestion
-                question={currentQuestion}
-                timeLimit={30}
-                onAnswer={handleAnswer}
-                isAnswered={!!userAnswers[currentQuestion.id]}
-                isCorrect={correctAnswers[currentQuestion.id]}
-                userAnswer={userAnswers[currentQuestion.id]}
-              />
+              {currentQuestion && (
+                <QuizQuestion
+                  question={currentQuestion}
+                  timeLimit={30}
+                  onAnswer={handleAnswer}
+                  isAnswered={!!userAnswers[currentQuestion.id]}
+                  isCorrect={correctAnswers[currentQuestion.id]}
+                  userAnswer={userAnswers[currentQuestion.id]}
+                />
+              )}
             </GameCard>
           </div>
         ) : (

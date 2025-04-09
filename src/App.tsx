@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/context/AuthContext";
 
 // Import all pages
 import Landing from "@/pages/Landing";
@@ -23,33 +24,35 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          {/* Index redirect */}
-          <Route path="/index" element={<Index />} />
-          
-          {/* Protected Routes (in a real app, these would be protected with authentication) */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/daily-quiz" element={<DailyQuiz />} />
-          <Route path="/leaderboard" element={<LeaderBoard />} />
-          <Route path="/multiplayer" element={<Multiplayer />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/subscription" element={<Subscription />} />
-          <Route path="/logout" element={<LogoutConfirmation />} />
-          
-          {/* Not Found */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            
+            {/* Index redirect */}
+            <Route path="/index" element={<Index />} />
+            
+            {/* Protected Routes (in a real app, these would be protected with authentication) */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/daily-quiz" element={<DailyQuiz />} />
+            <Route path="/leaderboard" element={<LeaderBoard />} />
+            <Route path="/multiplayer" element={<Multiplayer />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/subscription" element={<Subscription />} />
+            <Route path="/logout" element={<LogoutConfirmation />} />
+            
+            {/* Not Found */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
