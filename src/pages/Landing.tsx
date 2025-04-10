@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = React.useState(false);
   
   useEffect(() => {
     // Demo welcome toast
@@ -49,6 +50,24 @@ const Landing = () => {
               )}
             </Button>
           </div>
+          {isOpen && (
+            <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 py-4">
+              <nav className="flex flex-col space-y-4 px-4">
+                <Link to="/" className="font-medium text-gray-900 hover:text-imperial transition-colors" onClick={() => setIsOpen(false)}>Home</Link>
+                <Link to="/#features" className="font-medium text-gray-600 hover:text-imperial transition-colors" onClick={() => setIsOpen(false)}>Features</Link>
+                <Link to="/#testimonials" className="font-medium text-gray-600 hover:text-imperial transition-colors" onClick={() => setIsOpen(false)}>Testimonials</Link>
+                <Link to="/#pricing" className="font-medium text-gray-600 hover:text-imperial transition-colors" onClick={() => setIsOpen(false)}>Pricing</Link>
+                <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
+                  <Link to="/login" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full">Sign In</Button>
+                  </Link>
+                  <Link to="/register" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full bg-imperial hover:bg-imperial/90">Sign Up</Button>
+                  </Link>
+                </div>
+              </nav>
+            </div>
+          )}
         </div>
       </header>
       
