@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,8 +11,7 @@ const Landing = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-  const [isOpen, setIsOpen] = React.useState(false);
-  
+
   useEffect(() => {
     // Demo welcome toast
     setTimeout(() => {
@@ -22,13 +20,13 @@ const Landing = () => {
       });
     }, 1500);
   }, []);
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="font-montserrat text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-imperial to-cherry-blossom">
-            TextTheAnswer
+            Text the Answer
           </div>
           <div className="hidden md:flex items-center gap-8">
             <nav className="flex items-center gap-6">
@@ -75,7 +73,7 @@ const Landing = () => {
           )}
         </div>
       </header>
-      
+
       <main>
         {/* Hero Section */}
         <section className="py-12 md:py-24 overflow-hidden">
@@ -121,7 +119,7 @@ const Landing = () => {
                     <div className="h-3 w-3 rounded-full bg-red-500 mr-2"></div>
                     <div className="h-3 w-3 rounded-full bg-yellow-500 mr-2"></div>
                     <div className="h-3 w-3 rounded-full bg-green-500 mr-4"></div>
-                    <div className="text-sm font-medium">TextTheAnswer Quiz</div>
+                    <div className="text-sm font-medium">Text the Answer Quiz</div>
                   </div>
                   <div className="p-6">
                     <div className="space-y-8">
@@ -145,7 +143,7 @@ const Landing = () => {
             </div>
           </div>
         </section>
-        
+
         {/* Features Section */}
         <section id="features" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
@@ -153,7 +151,7 @@ const Landing = () => {
               <h2 className="text-3xl font-bold font-montserrat mb-4">Why Choose Text the Answer?</h2>
               <p className="text-gray-600 max-w-2xl mx-auto">Our platform offers a variety of features to make learning fun and engaging.</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                 <div className="h-12 w-12 flex items-center justify-center rounded-full bg-imperial/10 text-imperial mb-4">
@@ -186,7 +184,7 @@ const Landing = () => {
             </div>
           </div>
         </section>
-        
+
         {/* CTA Section */}
         <section className="py-16 bg-gradient-to-r from-imperial to-cherry-blossom text-white">
           <div className="container mx-auto px-4 text-center">
@@ -201,7 +199,7 @@ const Landing = () => {
             </Link>
           </div>
         </section>
-        
+
         {/* Testimonials */}
         <section id="testimonials" className="py-16">
           <div className="container mx-auto px-4">
@@ -211,7 +209,7 @@ const Landing = () => {
                 Don't just take our word for it. Here's what players think about Text the Answer.
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-white rounded-xl p-6 border border-gray-200 shadow">
                 <div className="flex items-center mb-4">
@@ -258,7 +256,7 @@ const Landing = () => {
             </div>
           </div>
         </section>
-        
+
         {/* Pricing */}
         <section id="pricing" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
@@ -268,7 +266,7 @@ const Landing = () => {
                 Choose the plan that works best for you
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
                 {/* Education Plan */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
@@ -336,7 +334,7 @@ const Landing = () => {
                   </Link>
                 </div>
               </div>
-              
+
               <div className="bg-white rounded-xl border-2 border-imperial overflow-hidden shadow-lg scale-105 relative">
                 <div className="absolute top-0 inset-x-0 bg-imperial text-white text-center text-sm py-1 font-medium">
                   Most Popular
@@ -373,7 +371,7 @@ const Landing = () => {
                   </Link>
                 </div>
               </div>
-              
+
               <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
                 <div className="p-6">
                   <h3 className="text-lg font-semibold mb-1">Premium Annual</h3>
@@ -411,12 +409,12 @@ const Landing = () => {
           </div>
         </section>
       </main>
-      
+
       <footer className="bg-gray-900 text-gray-400 py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="font-montserrat text-xl font-bold text-white mb-4">TextTheAnswer</div>
+              <div className="font-montserrat text-xl font-bold text-white mb-4">Text the Answer</div>
               <p className="mb-4">The ultimate quiz platform for knowledge enthusiasts and trivia lovers.</p>
             </div>
             <div>
