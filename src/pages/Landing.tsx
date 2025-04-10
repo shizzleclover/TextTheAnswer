@@ -1,12 +1,17 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Award, Users, Calendar, CheckCircle } from 'lucide-react';
+import { BookOpen, Award, Users, Calendar, CheckCircle, Menu, X, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
   const [isOpen, setIsOpen] = React.useState(false);
   
   useEffect(() => {
