@@ -41,8 +41,12 @@ const Landing = () => {
             </div>
           </div>
           <div className="md:hidden">
-            <Button variant="ghost" size="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)}>
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
           </div>
         </div>
@@ -241,7 +245,44 @@ const Landing = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+                {/* Education Plan */}
+                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-1">
+                      <GraduationCap className="h-5 w-5 text-blue-500" />
+                      <h3 className="text-lg font-semibold">Student</h3>
+                    </div>
+                    <p className="text-gray-500 mb-4">For students and educators</p>
+                    <div className="mb-4">
+                      <span className="text-3xl font-bold">$4.99</span>
+                      <span className="text-gray-500">/month</span>
+                    </div>
+                    <ul className="space-y-2 mb-6">
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <span>All free features</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <span>Study material scanner</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <span>Educational content packs</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <span>50% off annual plan</span>
+                      </li>
+                    </ul>
+                    <Link to="/register">
+                      <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                        Get Student Plan
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
                 <div className="p-6">
                   <h3 className="text-lg font-semibold mb-1">Free</h3>
