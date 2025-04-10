@@ -1,45 +1,37 @@
-import { apiRequest } from './api';
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  avatar?: string;
-}
-
-interface AuthResponse {
-  user: User;
-  token: string;
-}
+const MOCK_USER = {
+  id: 'mock-123',
+  username: 'Demo User',
+  email: 'demo@example.com',
+  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo'
+};
 
 export const authService = {
   register: async (username: string, email: string, password: string) => {
-    return await apiRequest<AuthResponse>('/auth/register', 'POST', {
-      username,
-      email,
-      password
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return { data: { user: MOCK_USER, token: 'mock-token' } };
   },
 
   login: async (email: string, password: string) => {
-    return await apiRequest<AuthResponse>('/auth/login', 'POST', {
-      email,
-      password
-    });
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return { data: { user: MOCK_USER, token: 'mock-token' } };
   },
 
   appleCallback: async (code: string) => {
-    return await apiRequest<AuthResponse>('/auth/apple/callback', 'POST', { code });
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return { data: { user: MOCK_USER, token: 'mock-token' } };
   },
 
   getProfile: async () => {
-    return await apiRequest<User>('/auth/profile');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return { data: MOCK_USER };
   },
 
   logout: async () => {
-    const response = await apiRequest('/auth/logout', 'POST');
+    await new Promise(resolve => setTimeout(resolve, 500));
     localStorage.removeItem('authToken');
-    return response;
+    return { data: null };
   },
 
   isAuthenticated: () => {
