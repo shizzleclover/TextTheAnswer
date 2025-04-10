@@ -257,6 +257,35 @@ const Landing = () => {
           </div>
         </section>
 
+        {/* Mobile App CTA */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="space-y-6 max-w-lg">
+                <h2 className="text-3xl font-bold font-montserrat">Get Our Mobile App</h2>
+                <p className="text-gray-600">Take your quizzes on the go! Download our mobile app to challenge yourself anytime, anywhere.</p>
+                <div className="flex items-center gap-4">
+                  <a href="#" className="inline-block">
+                    <img 
+                      src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" 
+                      alt="Download on App Store" 
+                      className="h-12"
+                    />
+                  </a>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-lg">
+                <img 
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://example.com/app" 
+                  alt="App QR Code"
+                  className="w-48 h-48"
+                />
+                <p className="text-center text-sm text-gray-500 mt-4">Scan to download</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Pricing */}
         <section id="pricing" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
