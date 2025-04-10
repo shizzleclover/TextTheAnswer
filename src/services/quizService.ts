@@ -1,9 +1,10 @@
 
-import { apiRequest } from './api';
+import { mockQuestions, mockLeaderboard, mockLobbies, mockUserStats } from './mockData';
 
 export interface QuizQuestion {
   id: string;
   question: string;
+  options: string[];
   correctAnswer: string;
   explanation?: string;
 }
@@ -28,26 +29,53 @@ export interface LeaderboardEntry {
 }
 
 export const quizService = {
-  // Get daily quiz questions
   getDailyQuiz: async () => {
-    return await apiRequest<QuizQuestion[]>('/quiz/daily');
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
+    return { data: mockQuestions };
   },
-  
-  // Submit answer for daily quiz
+
   submitAnswer: async (submission: QuizSubmission) => {
-    return await apiRequest<{
-      correct: boolean;
-      correctAnswer: string;
-    }>('/quiz/daily/submit', 'POST', submission);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const question = mockQuestions.find(q => q.id === submission.questionId);
+    const correct = question?.correctAnswer === submission.answer;
+    return {
+      data: {
+        correct,
+        correctAnswer: question?.correctAnswer || '',
+        explanation: question?.explanation
+      }
+    };
   },
-  
-  // Submit complete quiz
+
   submitQuiz: async (submissions: QuizSubmission[]) => {
-    return await apiRequest<QuizResult>('/quiz/daily/submit', 'POST', { submissions });
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const correctAnswers = submissions.filter(sub => {
+      const question = mockQuestions.find(q => q.id === sub.questionId);
+      return question?.correctAnswer === sub.answer;
+    });
+
+    return {
+      data: {
+        correct: correctAnswers.length === submissions.length,
+        score: correctAnswers.length * 100,
+        totalQuestions: submissions.length,
+        streakIncreased: correctAnswers.length >= submissions.length * 0.7
+      }
+    };
   },
-  
-  // Get daily quiz leaderboard
+
   getDailyLeaderboard: async () => {
-    return await apiRequest<LeaderboardEntry[]>('/quiz/daily/leaderboard');
+    await new Promise(resolve => setTimeout(resolve, 800));
+    return { data: mockLeaderboard };
+  },
+
+  getLobbies: async () => {
+    await new Promise(resolve => setTimeout(resolve, 600));
+    return { data: mockLobbies };
+  },
+
+  getUserStats: async () => {
+    await new Promise(resolve => setTimeout(resolve, 400));
+    return { data: mockUserStats };
   }
 };
